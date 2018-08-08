@@ -2,16 +2,12 @@ package pl.aptewicz.reactor.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.mongodb.core.CollectionOptions;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Service;
 import pl.aptewicz.reactor.dto.AtomicReactorDto;
 import pl.aptewicz.reactor.mapper.AtomicReactorMapper;
 import pl.aptewicz.reactor.repository.AtomicReactorReactiveRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import javax.annotation.PostConstruct;
 
 @Service
 public class AtomicReactorReactiveServiceImpl implements AtomicReactorReactiveService {
@@ -22,19 +18,9 @@ public class AtomicReactorReactiveServiceImpl implements AtomicReactorReactiveSe
 
     private final AtomicReactorReactiveRepository repository;
 
-    private final ReactiveMongoTemplate mongoTemplate;
-
-    public AtomicReactorReactiveServiceImpl(AtomicReactorMapper mapper, AtomicReactorReactiveRepository repository,
-            ReactiveMongoTemplate mongoTemplate) {
+    public AtomicReactorReactiveServiceImpl(AtomicReactorMapper mapper, AtomicReactorReactiveRepository repository) {
         this.mapper = mapper;
         this.repository = repository;
-        this.mongoTemplate = mongoTemplate;
-    }
-
-    @PostConstruct
-    public void createCappedCollection() {
-        mongoTemplate.createCollection("atomicReactors", CollectionOptions.empty().capped().size(2048))
-                .subscribe(mongoCollection -> System.out.println("Mongo capped collection created!"));
     }
 
     @Override
